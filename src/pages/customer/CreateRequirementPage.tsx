@@ -22,10 +22,10 @@ const steps = [
 ]
 
 const schema = z.object({
-  title: z.string().min(10, 'Title must be at least 10 characters').max(120),
+  title: z.string().min(1, 'Title is required'),
   requirement_type: z.enum(['Product', 'Service']),
   category_id: z.string().min(1, 'Please select a category'),
-  description: z.string().min(30, 'Description must be at least 30 characters').max(2000),
+  description: z.string().min(1, 'Description is required'),
   budget_min: z.number().min(1, 'Minimum budget required').positive(),
   budget_max: z.number().min(1, 'Maximum budget required').positive(),
   deadline: z.string().min(1, 'Deadline is required'),

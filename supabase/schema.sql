@@ -278,7 +278,7 @@ on conflict (slug) do nothing;
 
 -- Storage Buckets & Policies
 insert into storage.buckets (id, name, public) values ('avatars', 'avatars', true) on conflict do nothing;
-insert into storage.buckets (id, name, public) values ('reference-files', 'reference-files', false) on conflict do nothing;
+insert into storage.buckets (id, name, public) values ('reference-files', 'reference-files', true) on conflict (id) do update set public = true;
 
 drop policy if exists "Avatars are publicly accessible" on storage.objects;
 drop policy if exists "Users can upload avatars" on storage.objects;
