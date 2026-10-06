@@ -6,6 +6,7 @@ import { ordersService } from '../../services/ordersService'
 import { useAuth } from '../../hooks/useAuth'
 import type { OrderWithDetails, OrderStatus } from '../../types/database'
 import { formatCurrency, formatRelativeTime } from '../../utils/formatters'
+import toast from 'react-hot-toast'
 
 const STATUS_CONFIG: Record<OrderStatus, { label: string; color: string }> = {
   pending:            { label: 'Awaiting Payment',   color: 'badge-yellow' },
@@ -29,7 +30,14 @@ export default function ProviderOrdersPage() {
   useEffect(() => {
     if (!profile) return
     ordersService.getForProvider(profile.id)
-      .then(setOrders)
+      .then(data => {
+        console.log('Provider Orders fetched:', data)
+        setOrders(data)
+      })
+      .catch(err => {
+        console.error('Provider Orders fetch failed:', err)
+        toast.error('Failed to load orders: ' + err.message)
+      })
       .finally(() => setLoading(false))
   }, [profile])
 

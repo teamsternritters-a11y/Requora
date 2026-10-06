@@ -366,6 +366,19 @@ export const ordersService = {
   },
 
   async getForCustomer(customerId: string): Promise<OrderWithDetails[]> {
+    // Step 1: Get order IDs
+    const { data: orderIds, error: idsError } = await supabase
+      .from('orders')
+      .select('id')
+      .eq('customer_id', customerId)
+      .order('created_at', { ascending: false })
+    if (idsError) {
+      console.error('getForCustomer ids error:', idsError)
+      throw idsError
+    }
+    if (!orderIds || orderIds.length === 0) return []
+
+    // Step 2: Fetch full details
     const { data, error } = await supabase
       .from('orders')
       .select(`
@@ -376,13 +389,29 @@ export const ordersService = {
         payments (*),
         deliveries (*)
       `)
-      .eq('customer_id', customerId)
+      .in('id', orderIds.map((o: any) => o.id))
       .order('created_at', { ascending: false })
-    if (error) throw error
+    if (error) {
+      console.error('getForCustomer details error:', error)
+      throw error
+    }
     return (data ?? []) as OrderWithDetails[]
   },
 
   async getForProvider(providerId: string): Promise<OrderWithDetails[]> {
+    // Step 1: Get order IDs for this provider (simple query, less RLS surface)
+    const { data: orderIds, error: idsError } = await supabase
+      .from('orders')
+      .select('id')
+      .eq('provider_id', providerId)
+      .order('created_at', { ascending: false })
+    if (idsError) {
+      console.error('getForProvider ids error:', idsError)
+      throw idsError
+    }
+    if (!orderIds || orderIds.length === 0) return []
+
+    // Step 2: Fetch full details for those orders
     const { data, error } = await supabase
       .from('orders')
       .select(`
@@ -393,9 +422,12 @@ export const ordersService = {
         payments (*),
         deliveries (*)
       `)
-      .eq('provider_id', providerId)
+      .in('id', orderIds.map((o: any) => o.id))
       .order('created_at', { ascending: false })
-    if (error) throw error
+    if (error) {
+      console.error('getForProvider details error:', error)
+      throw error
+    }
     return (data ?? []) as OrderWithDetails[]
   },
 
@@ -417,7 +449,10 @@ export const ordersService = {
       `)
       .eq('id', orderId)
       .single()
-    if (error) throw error
+    if (error) {
+      console.error('getById error:', error)
+      throw error
+    }
     return data as OrderWithDetails
   },
 

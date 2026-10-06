@@ -49,8 +49,8 @@ export default function OrderDetailPage() {
   const [hasReviewed, setHasReviewed] = useState(false)
   const [showReviewModal, setShowReviewModal] = useState(false)
 
-  const isCustomer = profile?.role === 'customer'
-  const isProvider = profile?.role === 'provider'
+  const isCustomer = order ? profile?.id === order.customer_id : profile?.role === 'customer'
+  const isProvider = order ? profile?.id === order.provider_id : profile?.role === 'provider'
 
   const load = useCallback(async () => {
     if (!id) return

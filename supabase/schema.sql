@@ -515,65 +515,47 @@ begin
   end loop;
 end $$;
 
+-- Helper to check order party (security definer avoids circular RLS in joins)
+create or replace function public.is_order_party(p_order_id uuid)
+returns boolean as $$
+  select exists (
+    select 1 from public.orders
+    where id = p_order_id
+      and (customer_id = auth.uid() or provider_id = auth.uid())
+  );
+$$ language sql security definer stable;
+
 -- Orders
-create policy "Customers can view own orders"  on public.orders for select using (auth.uid() = customer_id);
-create policy "Providers can view own orders"  on public.orders for select using (auth.uid() = provider_id);
-create policy "System can insert orders"       on public.orders for insert with check (auth.uid() = customer_id);
-create policy "Parties can update own orders"  on public.orders for update using (auth.uid() = customer_id or auth.uid() = provider_id);
+create policy "Parties can view own orders"   on public.orders for select using (auth.uid() = customer_id or auth.uid() = provider_id);
+create policy "System can insert orders"      on public.orders for insert with check (auth.uid() = customer_id);
+create policy "Parties can update own orders" on public.orders for update using (auth.uid() = customer_id or auth.uid() = provider_id);
 
--- Payments
-create policy "Customers can insert payments"  on public.payments for insert with check (auth.uid() = customer_id);
-create policy "Customers can view own payments" on public.payments for select using (auth.uid() = customer_id);
-create policy "Providers can view order payments" on public.payments for select using (
-  exists (select 1 from public.orders where id = order_id and provider_id = auth.uid())
-);
+-- Payments — both parties can view
+create policy "Parties can view payments"     on public.payments for select using (public.is_order_party(order_id));
+create policy "Customers can insert payments" on public.payments for insert with check (auth.uid() = customer_id);
 
--- Escrow
-create policy "Parties can view escrow"        on public.escrow_records for select using (
-  exists (select 1 from public.orders where id = order_id and (customer_id = auth.uid() or provider_id = auth.uid()))
-);
-create policy "System can insert escrow"       on public.escrow_records for insert with check (
-  exists (select 1 from public.orders where id = order_id and customer_id = auth.uid())
-);
-create policy "System can update escrow"       on public.escrow_records for update using (
-  exists (select 1 from public.orders where id = order_id and (customer_id = auth.uid() or provider_id = auth.uid()))
-);
+-- Escrow — both parties can view
+create policy "Parties can view escrow"  on public.escrow_records for select using (public.is_order_party(order_id));
+create policy "System can insert escrow" on public.escrow_records for insert with check (public.is_order_party(order_id));
+create policy "System can update escrow" on public.escrow_records for update using (public.is_order_party(order_id));
 
--- Deliveries
-create policy "Providers can insert deliveries"  on public.deliveries for insert with check (auth.uid() = provider_id);
-create policy "Providers can update own deliveries" on public.deliveries for update using (auth.uid() = provider_id);
-create policy "Parties can view deliveries"      on public.deliveries for select using (
-  auth.uid() = provider_id or
-  exists (select 1 from public.orders where id = order_id and customer_id = auth.uid())
-);
-create policy "Customers can update delivery review" on public.deliveries for update using (
-  exists (select 1 from public.orders where id = order_id and customer_id = auth.uid())
-);
+-- Deliveries — both parties can view
+create policy "Providers can insert deliveries"      on public.deliveries for insert with check (auth.uid() = provider_id);
+create policy "Parties can view deliveries"          on public.deliveries for select using (public.is_order_party(order_id));
+create policy "Providers can update own deliveries"  on public.deliveries for update using (auth.uid() = provider_id);
+create policy "Customers can update delivery review" on public.deliveries for update using (public.is_order_party(order_id));
 
 -- Transactions
-create policy "Parties can view own transactions" on public.transactions for select using (
-  auth.uid() = from_user or auth.uid() = to_user
-);
-create policy "System can insert transactions" on public.transactions for insert with check (
-  exists (select 1 from public.orders where id = order_id and (customer_id = auth.uid() or provider_id = auth.uid()))
-);
+create policy "Parties can view own transactions" on public.transactions for select using (auth.uid() = from_user or auth.uid() = to_user or public.is_order_party(order_id));
+create policy "System can insert transactions"    on public.transactions for insert with check (public.is_order_party(order_id));
 
 -- Order Events
-create policy "Parties can view order events" on public.order_events for select using (
-  exists (select 1 from public.orders where id = order_id and (customer_id = auth.uid() or provider_id = auth.uid()))
-);
-create policy "System can insert order events" on public.order_events for insert with check (
-  exists (select 1 from public.orders where id = order_id and (customer_id = auth.uid() or provider_id = auth.uid()))
-);
+create policy "Parties can view order events"  on public.order_events for select using (public.is_order_party(order_id));
+create policy "System can insert order events" on public.order_events for insert with check (public.is_order_party(order_id));
 
 -- Disputes
-create policy "Parties can view disputes"  on public.disputes for select using (
-  auth.uid() = raised_by or
-  exists (select 1 from public.orders where id = order_id and (customer_id = auth.uid() or provider_id = auth.uid()))
-);
-create policy "Parties can insert disputes" on public.disputes for insert with check (
-  exists (select 1 from public.orders where id = order_id and (customer_id = auth.uid() or provider_id = auth.uid()))
-);
+create policy "Parties can view disputes"    on public.disputes for select using (auth.uid() = raised_by or public.is_order_party(order_id));
+create policy "Parties can insert disputes"  on public.disputes for insert with check (public.is_order_party(order_id));
 
 -- â”€â”€â”€ Storage bucket for delivery files â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 insert into storage.buckets (id, name, public)
