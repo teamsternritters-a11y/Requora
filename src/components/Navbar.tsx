@@ -1,6 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom'
 import { useState } from 'react'
-import { Menu, X, Bell, User, LogOut, ChevronDown } from 'lucide-react'
+import { Menu, X, Bell, User, LogOut, ChevronDown, LayoutDashboard } from 'lucide-react'
 import { useAuth } from '../hooks/useAuth'
 import { useNotifications } from '../hooks/useNotifications'
 import { getInitials } from '../utils/formatters'
@@ -47,6 +47,13 @@ export function Navbar() {
           <div className="flex items-center gap-2">
             {user && profile ? (
               <>
+                <Link
+                  to={profile.role === 'customer' ? '/dashboard/customer' : '/dashboard/provider'}
+                  className="hidden md:flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium text-brand-400 hover:text-brand-300 hover:bg-brand-500/10 transition-all mr-1"
+                >
+                  <LayoutDashboard size={16} />
+                  Dashboard
+                </Link>
                 <Link
                   to={profile.role === 'customer' ? '/dashboard/customer/notifications' : '/dashboard/provider/notifications'}
                   className="relative p-2 rounded-lg text-surface-300 hover:text-surface-50 hover:bg-surface-800 transition-all"
@@ -111,6 +118,15 @@ export function Navbar() {
       {mobileOpen && (
         <div className="md:hidden border-t border-white/8 bg-surface-800/95 backdrop-blur-xl animate-fade-in">
           <div className="px-4 py-3 space-y-1">
+            {user && profile && (
+              <Link
+                to={profile.role === 'customer' ? '/dashboard/customer' : '/dashboard/provider'}
+                onClick={() => setMobileOpen(false)}
+                className="block px-4 py-2.5 text-sm font-semibold text-brand-400 bg-brand-500/10 rounded-xl"
+              >
+                Dashboard
+              </Link>
+            )}
             {navLinks.map(({ to, label }) => (
               <a
                 key={to}
