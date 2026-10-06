@@ -5,7 +5,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import {
   ArrowLeft, Clock, Tag, Users, Plus, X,
-  ExternalLink, Send, Calendar, DollarSign
+  ExternalLink, Send, Calendar
 } from 'lucide-react'
 import { DashboardLayout } from '../../components/DashboardLayout'
 import { requirementsService } from '../../services/requirementsService'
@@ -218,7 +218,7 @@ export default function SubmitOfferPage() {
                   <div>
                     <label className="input-label" htmlFor="offer-price">Your price (₹)</label>
                     <div className="relative">
-                      <DollarSign size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-surface-400" />
+                      <span className="absolute left-3 top-1/2 -translate-y-1/2 text-surface-400 text-sm font-medium">₹</span>
                       <input
                         id="offer-price"
                         type="number"
