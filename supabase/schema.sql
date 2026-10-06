@@ -266,7 +266,12 @@ insert into public.categories (name, slug, icon, sort_order) values
   ('Mobile App',        'mobile-app',         'ðŸ“±', 3),
   ('Software & Tech',   'software-tech',      'ðŸ”§', 4),
   ('Content Writing',   'content-writing',    'âœï¸', 5),
-  ('Physical Products', 'physical-products',  'ðŸ›’', 6),
+  ('Electronics',       'electronics',        '🔌', 6),
+  ('Clothing & Apparel','clothing-apparel',   '👕', 7),
+  ('Home & Furniture',  'home-furniture',     '🛋️', 8),
+  ('Health & Beauty',   'health-beauty',      '🧴', 9),
+  ('Toys & Games',      'toys-games',         '🎲', 10),
+  ('Office Supplies',   'office-supplies',    '📎', 11),
   ('Computer Services', 'computer-services',  'ðŸ–¥ï¸', 7),
   ('Photography',       'photography',        'ðŸ“·', 8)
 on conflict (slug) do nothing;

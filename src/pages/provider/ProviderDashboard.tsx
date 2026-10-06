@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import {
   Briefcase, Star, Search, Check,
-  TrendingUp, ChevronRight
+  TrendingUp, ChevronRight, Plus
 } from 'lucide-react'
 import { useAuth } from '../../hooks/useAuth'
 import { DashboardLayout } from '../../components/DashboardLayout'
@@ -56,10 +56,16 @@ export default function ProviderDashboard() {
             </h1>
             <p className="text-surface-300 text-sm mt-1">Find requirements and submit your best offers.</p>
           </div>
-          <Link to="/explore" className="btn-primary">
-            <Search size={16} />
-            Browse Requirements
-          </Link>
+          <div className="flex gap-3">
+            <Link to="/requirements/create" className="btn-secondary">
+              <Plus size={16} />
+              Post Requirement
+            </Link>
+            <Link to="/explore" className="btn-primary">
+              <Search size={16} />
+              Browse Requirements
+            </Link>
+          </div>
         </div>
 
         {/* Stats */}

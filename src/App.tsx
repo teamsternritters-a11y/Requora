@@ -67,13 +67,13 @@ function AppRoutes() {
         <ProtectedRoute role="customer"><CustomerDashboard /></ProtectedRoute>
       } />
       <Route path="/dashboard/customer/requirements" element={
-        <ProtectedRoute role="customer"><MyRequirementsPage /></ProtectedRoute>
+        <ProtectedRoute><MyRequirementsPage /></ProtectedRoute>
       } />
       <Route path="/dashboard/customer/requirements/:id" element={
-        <ProtectedRoute role="customer"><RequirementDetailPage /></ProtectedRoute>
+        <ProtectedRoute><RequirementDetailPage /></ProtectedRoute>
       } />
       <Route path="/requirements/create" element={
-        <ProtectedRoute role="customer"><CreateRequirementPage /></ProtectedRoute>
+        <ProtectedRoute><CreateRequirementPage /></ProtectedRoute>
       } />
       <Route path="/dashboard/customer/notifications" element={
         <ProtectedRoute role="customer"><NotificationsPage role="customer" /></ProtectedRoute>

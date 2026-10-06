@@ -39,6 +39,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
   const providerLinks: SidebarLink[] = [
     { to: '/dashboard/provider', icon: LayoutDashboard, label: 'Dashboard' },
     { to: '/explore', icon: Search, label: 'Explore' },
+    { to: '/dashboard/customer/requirements', icon: FileText, label: 'My Requirements' },
     { to: '/dashboard/provider/offers', icon: Briefcase, label: 'My Offers' },
     { to: '/dashboard/provider/orders', icon: Package, label: 'My Orders' },
     { to: '/dashboard/provider/notifications', icon: Bell, label: 'Notifications', badge: unreadCount },
@@ -153,12 +154,10 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
             <span className="font-display font-bold text-surface-50">Requora</span>
           </Link>
           <div className="flex-1" />
-          {isCustomer && (
-            <Link to="/requirements/create" className="btn-primary text-xs px-3 py-1.5">
-              <Plus size={14} />
-              Post
-            </Link>
-          )}
+          <Link to="/requirements/create" className="btn-primary text-xs px-3 py-1.5">
+            <Plus size={14} />
+            Post
+          </Link>
           <Link to={isCustomer ? '/dashboard/customer/notifications' : '/dashboard/provider/notifications'} className="relative p-2 rounded-lg text-surface-100">
             <Bell size={20} />
             {unreadCount > 0 && <span className="absolute top-1 right-1 w-2 h-2 rounded-full bg-red-500" />}

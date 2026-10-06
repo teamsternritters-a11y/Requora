@@ -124,7 +124,20 @@ export default function CreateRequirementPage() {
     }
   }
 
-  const popularCategories = categories.slice(0, 6)
+  const productCategorySlugs = [
+    'electronics', 
+    'clothing-apparel', 
+    'home-furniture', 
+    'health-beauty', 
+    'toys-games', 
+    'office-supplies'
+  ]
+  const filteredCategories = categories.filter(c => 
+    watchedType === 'Product' 
+      ? productCategorySlugs.includes(c.slug) 
+      : !productCategorySlugs.includes(c.slug)
+  )
+
   const selectedCategory = categories.find(c => c.id === watchedCategory)
 
   return (
@@ -190,7 +203,7 @@ export default function CreateRequirementPage() {
                         onClick={() => setValue('requirement_type', t)}
                         className={`p-4 rounded-xl border-2 text-sm font-semibold transition-all ${
                           watchedType === t
-                            ? 'border-brand-500 bg-brand-500/10 text-white'
+                            ? 'border-brand-500 bg-brand-500/10 text-brand-700'
                             : 'border-surface-700 text-surface-300 hover:border-surface-600'
                         }`}
                       >
@@ -208,34 +221,14 @@ export default function CreateRequirementPage() {
                     {...register('category_id')}
                   >
                     <option value="">Choose a category...</option>
-                    {categories.map(c => (
+                    {filteredCategories.map(c => (
                       <option key={c.id} value={c.id}>{c.icon} {c.name}</option>
                     ))}
                   </select>
                   {errors.category_id && <p className="text-red-400 text-xs mt-1">{errors.category_id.message}</p>}
                 </div>
 
-                {popularCategories.length > 0 && (
-                  <div>
-                    <p className="text-xs text-surface-400 mb-2">Popular categories</p>
-                    <div className="flex flex-wrap gap-2">
-                      {popularCategories.map(c => (
-                        <button
-                          key={c.id}
-                          type="button"
-                          onClick={() => setValue('category_id', c.id)}
-                          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all border ${
-                            watchedCategory === c.id
-                              ? 'bg-brand-500/20 text-brand-300 border-brand-500/30'
-                              : 'bg-surface-800 text-surface-300 border-surface-700 hover:bg-surface-700'
-                          }`}
-                        >
-                          {c.icon} {c.name}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                )}
+
               </div>
             )}
 
