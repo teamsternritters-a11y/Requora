@@ -18,7 +18,7 @@ import toast from 'react-hot-toast'
 const schema = z.object({
   price: z.number().positive('Price must be a positive number'),
   delivery_days: z.number().int().positive('Delivery days must be a positive integer'),
-  proposal: z.string().min(50, 'Proposal must be at least 50 characters').max(2000),
+  proposal: z.string().min(1, 'Proposal is required'),
 })
 
 type FormData = z.infer<typeof schema>

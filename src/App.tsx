@@ -101,13 +101,13 @@ function AppRoutes() {
 
       {/* v2 — Customer Orders + Payment */}
       <Route path="/dashboard/customer/orders" element={
-        <ProtectedRoute role="customer"><CustomerOrdersPage /></ProtectedRoute>
+        <ProtectedRoute><CustomerOrdersPage /></ProtectedRoute>
       } />
       <Route path="/dashboard/customer/orders/:id" element={
-        <ProtectedRoute role="customer"><OrderDetailPage /></ProtectedRoute>
+        <ProtectedRoute><OrderDetailPage /></ProtectedRoute>
       } />
       <Route path="/dashboard/customer/orders/:id/pay" element={
-        <ProtectedRoute role="customer"><PaymentPage /></ProtectedRoute>
+        <ProtectedRoute><PaymentPage /></ProtectedRoute>
       } />
 
       {/* v2 — Provider Orders + Delivery */}

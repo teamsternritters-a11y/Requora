@@ -2,7 +2,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 import {
   LayoutDashboard, Search, Bell, User, LogOut, Plus,
-  Briefcase, FileText, Menu, X, Package
+  Briefcase, FileText, Menu, X, Package, ShoppingBag
 } from 'lucide-react'
 import { useAuth } from '../hooks/useAuth'
 import { useNotifications } from '../hooks/useNotifications'
@@ -41,7 +41,8 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
     { to: '/explore', icon: Search, label: 'Explore' },
     { to: '/dashboard/customer/requirements', icon: FileText, label: 'My Requirements' },
     { to: '/dashboard/provider/offers', icon: Briefcase, label: 'My Offers' },
-    { to: '/dashboard/provider/orders', icon: Package, label: 'My Orders' },
+    { to: '/dashboard/customer/orders', icon: ShoppingBag, label: 'Purchases' },
+    { to: '/dashboard/provider/orders', icon: Package, label: 'Sales' },
     { to: '/dashboard/provider/notifications', icon: Bell, label: 'Notifications', badge: unreadCount },
     { to: '/dashboard/provider/profile', icon: User, label: 'Profile' },
   ]

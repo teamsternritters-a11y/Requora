@@ -10,7 +10,7 @@ import { getInitials } from '../utils/formatters'
 import toast from 'react-hot-toast'
 
 const schema = z.object({
-  full_name: z.string().min(2, 'Name too short'),
+  full_name: z.string().min(1, 'Name is required'),
   bio: z.string().max(500, 'Bio too long').optional(),
   location: z.string().max(100).optional(),
   website: z.string().url('Invalid URL').optional().or(z.literal('')),

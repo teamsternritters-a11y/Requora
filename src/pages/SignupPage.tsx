@@ -8,9 +8,9 @@ import { useAuth } from '../hooks/useAuth'
 import toast from 'react-hot-toast'
 
 const signupSchema = z.object({
-  fullName: z.string().min(2, 'Name must be at least 2 characters'),
+  fullName: z.string().min(1, 'Name is required'),
   email: z.string().email('Invalid email address'),
-  password: z.string().min(8, 'Password must be at least 8 characters'),
+  password: z.string().min(1, 'Password is required'),
   confirmPassword: z.string(),
   role: z.enum(['customer', 'provider']),
   agree: z.literal(true, { errorMap: () => ({ message: 'You must agree to the terms' }) }),
