@@ -80,7 +80,7 @@ export default function SignupPage() {
         </div>
         <div className="relative z-10 max-w-sm text-center space-y-6">
           <img src="/favicon.jpg" alt="Logo" className="w-16 h-16 rounded-3xl object-cover mx-auto shadow-xl border border-surface-700" />
-          <h2 className="text-3xl font-display font-bold text-surface-50 leading-tight">
+          <h2 className="text-3xl font-display font-bold text-white leading-tight">
             Join thousands finding the best providers
           </h2>
           {[
@@ -89,7 +89,7 @@ export default function SignupPage() {
             'Smart AI matching scores',
             'Transparent comparison dashboard',
           ].map(f => (
-            <div key={f} className="flex items-center gap-3 text-surface-200">
+            <div key={f} className="flex items-center gap-3 text-white/75">
               <div className="w-5 h-5 rounded-full bg-emerald-500/30 flex items-center justify-center flex-shrink-0">
                 <Check size={12} className="text-emerald-400" />
               </div>
@@ -119,13 +119,13 @@ export default function SignupPage() {
                 onClick={() => setValue('role', r)}
                 className={`flex flex-col items-center gap-2 p-4 rounded-xl border-2 transition-all duration-200 ${
                   role === r
-                    ? 'border-brand-500 bg-brand-500/10 text-white'
-                    : 'border-surface-700 bg-white/3 text-surface-300 hover:border-surface-600 hover:bg-surface-800'
+                    ? 'border-brand-500 bg-brand-500/10 text-brand-700'
+                    : 'border-surface-700 bg-surface-800 text-surface-200 hover:border-surface-600 hover:bg-surface-950'
                 }`}
               >
                 {r === 'customer' ? <User size={24} /> : <Briefcase size={24} />}
                 <span className="text-sm font-semibold capitalize">{r}</span>
-                <span className="text-xs opacity-60">
+                <span className={`text-xs ${role === r ? 'text-brand-600' : 'text-surface-300'}`}>
                   {r === 'customer' ? 'Post requirements' : 'Submit offers'}
                 </span>
               </button>
